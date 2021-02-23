@@ -26,3 +26,24 @@ class AvatarHandler(RequestHandler):
         pic = self.StorageDriver.open('resources/' + uuid + '.jpg', 'rb')
         pics = pic.read()
         return pics
+
+
+class AvatarNewHandler(RequestHandler):
+    executor = Executor()
+
+    def initialize(self, StorageDriverConfig):
+        config_header = StorageDriverConfig.find('://')
+        storage_driver = StorageDriverConfig[:config_header]
+        self.StorageDriver = __import__("common.StorageDriver." + storage_driver, fromlist=storage_driver).\
+            StorageDriver(StorageDriverConfig[config_header+3:])
+
+    @tornado.gen.coroutine
+    def post(self):
+        self.write("Test")
+        pass
+
+    @tornado.concurrent.run_on_executor
+    def _readpic(self, uuid):
+        pic = self.StorageDriver.open('resources/' + uuid + '.jpg', 'rb')
+        pics = pic.read()
+        return pics
