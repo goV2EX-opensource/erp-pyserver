@@ -18,5 +18,4 @@ class PingHandler(RequestHandler):
 
     @tornado.concurrent.run_on_executor
     def _process(self, pingword):
-        time.sleep(10)
         return pingword
